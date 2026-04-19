@@ -2,10 +2,10 @@ module.exports = {
   apps: [
     {
       name: "Attendance-Backend",
-      script: "python3",
-      args: "-m uvicorn main:app --host 0.0.0.0 --port 8000",
+      script: "main.py",
+      args: "",
       cwd: "./backend",
-      interpreter: "python3",
+      interpreter: "./venv/bin/python3",
       env: {
         NODE_ENV: "production",
       }
