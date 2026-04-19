@@ -28,8 +28,8 @@ sudo bash -c "cat > $CONF_FILE" <<EOF
     ProxyPreserveHost On
 
     # 1. WebSocket Proxy for AI Recognition
-    ProxyPass /ws/ ws://localhost:8000/ws/
-    ProxyPassReverse /ws/ ws://localhost:8000/ws/
+    ProxyPass /ws ws://localhost:8000/ws
+    ProxyPassReverse /ws ws://localhost:8000/ws
 
     # 2. API Proxy
     ProxyPass /api/ http://localhost:8000/api/

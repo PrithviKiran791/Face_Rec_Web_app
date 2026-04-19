@@ -7,7 +7,7 @@ import { api } from "@/lib/api";
 import { v4 as uuid } from "uuid";
 
 const SAMPLE_TARGET = 60;
-const WS_BASE_URL = process.env.NEXT_PUBLIC_WS_URL ?? "ws://localhost:8000";
+// We'll determine the WS URL dynamically inside the component to support HTTP/HTTPS transparently
 
 export default function RegisterPage() {
   const { isLoaded, userId } = useAuth();
@@ -67,7 +67,13 @@ export default function RegisterPage() {
       const { data } = await api.get("/api/auth/ws-token");
       const wsToken = (data as any).ws_token;
       
-      const ws = new WebSocket(`${WS_BASE_URL}/ws/register?token=${wsToken}`);
+      const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+      const wsHost = process.env.NEXT_PUBLIC_WS_URL 
+        ? process.env.NEXT_PUBLIC_WS_URL.replace(/^ws(s)?:\/\//, "") 
+        : window.location.host;
+      
+      const dynamicWsUrl = `${protocol}//${wsHost}`;
+      const ws = new WebSocket(`${dynamicWsUrl}/ws/register?token=${wsToken}`);
       wsRef.current = ws;
       setStreaming(true);
 

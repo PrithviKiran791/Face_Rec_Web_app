@@ -28,7 +28,7 @@ app.include_router(attendance.router, prefix="/api/attendance", tags=["Attendanc
 app.include_router(websocket.router,  prefix="/ws",             tags=["WebSocket"])
 
 
-@app.get("/health")
+@app.get("/api/health")
 def health():
     from face_rec import r
     return {"api": "ok", "redis": "connected" if r else "disconnected"}

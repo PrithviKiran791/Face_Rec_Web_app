@@ -4,7 +4,7 @@ import { useRef, useEffect, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { api } from "@/lib/api";
 
-const WS_BASE_URL = process.env.NEXT_PUBLIC_WS_URL ?? "ws://127.0.0.1:8000";
+// We'll determine the WS URL dynamically inside the component to support HTTP/HTTPS transparently
 
 type LivePayload = {
   frame?: string;
@@ -40,7 +40,13 @@ export default function LivePage() {
         const wsToken = data.ws_token;
 
         // 2. Setup WebSocket
-        ws = new WebSocket(`${WS_BASE_URL}/ws/recognize?token=${wsToken}`);
+        const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+        const wsHost = process.env.NEXT_PUBLIC_WS_URL 
+          ? process.env.NEXT_PUBLIC_WS_URL.replace(/^ws(s)?:\/\//, "") 
+          : window.location.host;
+        
+        const dynamicWsUrl = `${protocol}//${wsHost}`;
+        ws = new WebSocket(`${dynamicWsUrl}/ws/recognize?token=${wsToken}`);
         wsRef.current = ws;
 
         ws.onopen = () => {
