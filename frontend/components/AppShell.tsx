@@ -208,7 +208,7 @@ export default function AppShell({ children }: Readonly<PropsWithChildren>) {
         <div className="sidebar-footer">
           <div className="sidebar-user">
             <div className="sidebar-user-avatar">
-              <UserButton afterSignOutUrl="/sign-in" />
+              <UserButton />
             </div>
             <div className="sidebar-user-info" style={{ transition: "opacity 0.2s" }}>
               <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--text-main)", whiteSpace: "nowrap" }}>
