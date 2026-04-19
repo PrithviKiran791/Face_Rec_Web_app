@@ -40,7 +40,7 @@ export default function PageTransition({ children }: PropsWithChildren) {
       <AnimatePresence mode="popLayout" initial={false}>
         <motion.div
           key={pathname}
-          variants={!shouldReduceMotion ? variants : {}}
+          variants={!shouldReduceMotion ? (variants as any) : {}}
           initial="in"
           animate="inactive"
           exit="out"
