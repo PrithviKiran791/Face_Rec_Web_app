@@ -12,7 +12,7 @@ export default function DashboardPage() {
       <div className="panel">
         <div className="panel-body" style={{ padding: "36px 40px" }}>
           <h2 style={{ fontSize: "28px", fontWeight: 700, marginBottom: "8px" }}>
-            Welcome back, {user?.name || "Admin"}! 👋
+            Welcome back, {user?.fullName || "Admin"}! 👋
           </h2>
           <p style={{ color: "var(--text-muted)", fontSize: "16px", lineHeight: 1.6 }}>
             The Face Attendance System is running smoothly. Here's a quick overview of today's activity.
