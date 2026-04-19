@@ -1,0 +1,16 @@
+fastapi
+uvicorn[standard]
+python-multipart
+websockets
+redis
+numpy
+pandas
+opencv-python
+insightface
+scikit-learn
+onnxruntime
+python-dotenv
+# ── Auth dependencies ──────────────────────────────────────
+python-jose[cryptography]
+passlib[bcrypt]
+pyyaml

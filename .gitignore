@@ -1,0 +1,36 @@
+# Environments
+.env
+.env.local
+.env.*.local
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+.env/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+build/
+dist/
+.DS_Store
+
+# Large model data (Keep the model folder structure, ignore contents if too large)
+# backend/insightface_model/models/
+
+# Scratch and temp files
+backend/scratch/
+local_embeddings/
+face_embeddings.txt
+simulated_logs.txt
+
+# Docker logs
+*.log
+docker-compose.override.yml

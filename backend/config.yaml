@@ -1,0 +1,24 @@
+credentials:
+  usernames:
+    admin:
+      email: 'admin@attendance.local'
+      name: 'Administrator'
+      password: '$2b$12$E6KynjheUfekYhIcvTWI4eF0MhtLgtTSmu8vmH5WexfGWwOCSzR7W'
+      # password is: abc
+      # To generate a new hash run:
+      #   python -c "from passlib.context import CryptContext; print(CryptContext(schemes=['bcrypt']).hash('your_password'))"
+
+    # ── Add more users below in the same format ──────────────────────────────
+    # teacher1:
+    #   email: 'teacher@school.com'
+    #   name: 'John Smith'
+    #   password: '$2b$12$<paste generated hash here>'
+
+cookie:
+  expiry_days: 30
+  key: 'change-this-to-a-long-random-secret-before-deploying'
+  name: 'attendance_token'
+
+preauthorized:
+  emails:
+    - 'admin@attendance.local'
