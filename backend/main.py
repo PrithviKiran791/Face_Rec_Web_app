@@ -14,8 +14,9 @@ os.environ["ALBUMENTATIONS_DISABLE_VERSION_CHECK"] = "1"
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import register, attendance, websocket, groups, sessions, absentees
+from routers import register, attendance, websocket, groups, sessions, absentees, notifications
 from auth.router import router as auth_router
+from services import notification_service, webhook_manager, notification_config
 
 app = FastAPI(title="Face Attendance API")
 
@@ -41,10 +42,18 @@ app.include_router(attendance.router, prefix="/api/attendance", tags=["Attendanc
 app.include_router(groups.router,     prefix="/api/groups",     tags=["Groups"])
 app.include_router(sessions.router,   prefix="/api/sessions",   tags=["Sessions"])
 app.include_router(absentees.router,  prefix="/api/absentees",  tags=["Absentees"])
+app.include_router(notifications.router, prefix="/api/notifications", tags=["Notifications"])
 app.include_router(websocket.router,  prefix="/ws",             tags=["WebSocket"])
 
 
 @app.get("/api/health")
 def health():
     from face_rec import r
+    
+    # Initialize services with Redis
+    if r:
+        notification_service.set_redis(r)
+        webhook_manager.set_redis(r)
+        notification_config.set_redis(r)
+    
     return {"api": "ok", "redis": "connected" if r else "disconnected"}

@@ -14,3 +14,9 @@ python-dotenv
 python-jose[cryptography]
 passlib[bcrypt]
 pyyaml
+# ── Notification & Webhook dependencies ────────────────────
+sendgrid>=6.10.0
+resend>=0.3.0
+twilio>=8.10.0
+httpx>=0.24.0
+pydantic>=2.0.0

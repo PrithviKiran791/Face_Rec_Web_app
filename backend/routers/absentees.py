@@ -10,9 +10,11 @@ import json
 from datetime import datetime, date as date_type
 
 from fastapi import APIRouter, Depends, Query
+from pydantic import BaseModel
 
 from auth.dependencies import require_auth
 from face_rec import r
+from services import notification_service, webhook_manager, notification_config, WebhookEvent
 
 router = APIRouter()
 
@@ -166,4 +168,159 @@ async def get_today_absentees(
         "sessions": session_results,
         "total_absent": len(all_absentees),
         "absentees": all_absentees,
+    }
+
+
+# ── Notification Models ─────────────────────────────────────────────────────
+
+
+class NotifyAbsenceRequest(BaseModel):
+    person_name: str
+    person_id: str  # For looking up contact info
+    session_name: str
+    group_name: str
+    org_id: str
+
+
+@router.post("/notify-absence", dependencies=[Depends(require_auth)])
+async def notify_absence(
+    request: NotifyAbsenceRequest,
+    user_id: str = Depends(require_auth)
+):
+    """Send absence notifications to student/employee and optionally parents/managers
+    
+    This endpoint can be called when an absence is recorded to trigger immediate notifications.
+    """
+    if r is None:
+        return {"success": False, "error": "Redis unavailable"}
+    
+    # Get recipients for this person
+    recipients = notification_config.get_recipients_for_absence(
+        request.person_id,
+        request.person_name,
+        request.org_id
+    )
+    
+    results = {}
+    
+    # Notify student/employee themselves
+    if recipients.get("self", {}).get("email") or recipients.get("self", {}).get("phone"):
+        prefs = notification_config.get_user_preferences(request.person_id)
+        notification_type = prefs.get("channel", "email")
+        
+        result = await notification_service.send_absence_alert(
+            recipient_email=recipients["self"].get("email"),
+            recipient_phone=recipients["self"].get("phone"),
+            person_name=request.person_name,
+            session_name=request.session_name,
+            group_name=request.group_name,
+            notification_type=notification_type,
+            recipient_type="student"
+        )
+        results["self"] = result
+    
+    # Notify parents if configured
+    if recipients.get("parents", {}).get("email") or recipients.get("parents", {}).get("phone"):
+        result = await notification_service.send_absence_alert(
+            recipient_email=recipients["parents"].get("email"),
+            recipient_phone=recipients["parents"].get("phone"),
+            person_name=request.person_name,
+            session_name=request.session_name,
+            group_name=request.group_name,
+            notification_type="both",
+            recipient_type="parent"
+        )
+        results["parents"] = result
+    
+    # Notify managers if configured
+    if recipients.get("managers", {}).get("email") or recipients.get("managers", {}).get("phone"):
+        result = await notification_service.send_absence_alert(
+            recipient_email=recipients["managers"].get("email"),
+            recipient_phone=recipients["managers"].get("phone"),
+            person_name=request.person_name,
+            session_name=request.session_name,
+            group_name=request.group_name,
+            notification_type="both",
+            recipient_type="manager"
+        )
+        results["managers"] = result
+    
+    # Trigger webhook for this absence event
+    event = WebhookEvent(
+        event_type="absence",
+        data={
+            "person_name": request.person_name,
+            "person_id": request.person_id,
+            "session_name": request.session_name,
+            "group_name": request.group_name,
+            "timestamp": datetime.now().isoformat()
+        }
+    )
+    await webhook_manager.queue_event(event, user_id)
+    
+    return {
+        "success": True,
+        "message": "Absence notifications sent",
+        "results": results
+    }
+
+
+@router.post("/notify-bulk", dependencies=[Depends(require_auth)])
+async def notify_bulk_absences(
+    absences: list[NotifyAbsenceRequest],
+    user_id: str = Depends(require_auth)
+):
+    """Send notifications for multiple absences"""
+    if r is None:
+        return {"success": False, "error": "Redis unavailable"}
+    
+    results = []
+    for absence in absences:
+        # Reuse the single notify endpoint logic
+        recipients = notification_config.get_recipients_for_absence(
+            absence.person_id,
+            absence.person_name,
+            absence.org_id
+        )
+        
+        absence_results = {}
+        
+        # Quick notification without waiting for full async
+        if recipients.get("self", {}).get("email"):
+            prefs = notification_config.get_user_preferences(absence.person_id)
+            channel = prefs.get("channel", "email")
+            
+            result = await notification_service.send_absence_alert(
+                recipient_email=recipients["self"].get("email"),
+                recipient_phone=recipients["self"].get("phone") if channel in ["sms", "both"] else None,
+                person_name=absence.person_name,
+                session_name=absence.session_name,
+                group_name=absence.group_name,
+                notification_type=channel,
+                recipient_type="student"
+            )
+            absence_results["self"] = result.get("email", {}).get("success", False)
+        
+        # Queue webhook event
+        event = WebhookEvent(
+            event_type="absence",
+            data={
+                "person_name": absence.person_name,
+                "person_id": absence.person_id,
+                "session_name": absence.session_name,
+                "group_name": absence.group_name,
+                "timestamp": datetime.now().isoformat()
+            }
+        )
+        await webhook_manager.queue_event(event, user_id)
+        
+        results.append({
+            "person": absence.person_name,
+            "notified": bool(absence_results.get("self"))
+        })
+    
+    return {
+        "success": True,
+        "message": f"Notifications sent for {len(results)} absences",
+        "results": results
     }
