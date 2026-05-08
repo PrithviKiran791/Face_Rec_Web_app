@@ -57,3 +57,44 @@ If your recognition monitor is laggy or blocked by firewalls, set up a local STU
 ---
 ### Environment Variables (.env)
 Make sure to create `.env` files in both `/frontend` and `/backend` with your Clerk and Redis credentials before starting PM2.
+
+## Vercel Deployment Plan
+
+The frontend can be deployed on Vercel as a Next.js app, while the backend should stay on a separate host that supports FastAPI, Redis, and WebSockets.
+
+Use the root `vercel.json` to describe the split deployment structure:
+
+```json
+{
+   "experimentalServices": {
+      "frontend": {
+         "entrypoint": "frontend",
+         "routePrefix": "/",
+         "framework": "nextjs"
+      },
+      "backend": {
+         "entrypoint": "backend",
+         "routePrefix": "/_/backend"
+      }
+   }
+}
+```
+
+For the Vercel frontend, set these environment variables in the Vercel project settings:
+
+- `NEXT_PUBLIC_API_URL` - public URL of the deployed backend API
+- `NEXT_PUBLIC_WS_URL` - public WebSocket URL of the backend
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` - Clerk frontend key
+
+Recommended backend hosting options:
+
+- EC2 or any Docker-capable VPS
+- Render, Fly.io, Railway, or another service that supports FastAPI + WebSockets
+
+Backend runtime environment variables:
+
+- `REDIS_HOST`
+- `REDIS_PORT`
+- `REDIS_PASSWORD`
+- `ALLOWED_ORIGINS`
+- any Clerk JWT / auth secret values already used by the backend
