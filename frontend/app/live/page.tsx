@@ -67,6 +67,7 @@ export default function LivePage() {
   // Telemetry & Log State
   const [recognizedLog, setRecognizedLog] = useState<LogEntry[]>([]);
   const [seenNames, setSeenNames] = useState<Set<string>>(new Set());
+  const seenNamesRef = useRef<Set<string>>(new Set());
   const [fps, setFps] = useState(0);
   const [latency, setLatency] = useState(0);
 
@@ -90,6 +91,7 @@ export default function LivePage() {
     }
     frameInFlightRef.current = false;
     canvasSizedRef.current = false;
+    seenNamesRef.current = new Set();
   }, []);
 
   useEffect(() => {
@@ -115,6 +117,9 @@ export default function LivePage() {
       setHasReceivedFrame(false);
       frameInFlightRef.current = false;
       canvasSizedRef.current = false;
+      seenNamesRef.current = new Set();
+      setSeenNames(new Set());
+      setRecognizedLog([]);
 
       try {
         const wsToken = await getWsToken(getToken);
@@ -186,28 +191,24 @@ export default function LivePage() {
             
             // Update logs
             if (names.length > 0) {
-              setSeenNames(prev => {
-                const newSet = new Set(prev);
-                let added = false;
-                const newEntries: LogEntry[] = [];
-                
-                names.forEach(name => {
-                  if (!newSet.has(name)) {
-                    newSet.add(name);
-                    added = true;
-                    newEntries.push({
-                      id: Math.random().toString(36).substr(2, 9),
-                      name: name,
-                      time: new Date().toLocaleTimeString([], { hour12: false })
-                    });
-                  }
-                });
+              const uniqueNames = Array.from(new Set(names));
+              const newEntries: LogEntry[] = [];
 
-                if (added) {
-                  setRecognizedLog(currentLog => [...newEntries, ...currentLog].slice(0, 50));
+              uniqueNames.forEach((name) => {
+                if (!seenNamesRef.current.has(name)) {
+                  seenNamesRef.current.add(name);
+                  newEntries.push({
+                    id: globalThis.crypto?.randomUUID?.() ?? Math.random().toString(36).slice(2),
+                    name,
+                    time: new Date().toLocaleTimeString([], { hour12: false })
+                  });
                 }
-                return newSet;
               });
+
+              if (newEntries.length > 0) {
+                setSeenNames(new Set(seenNamesRef.current));
+                setRecognizedLog((currentLog) => [...newEntries, ...currentLog].slice(0, 50));
+              }
             }
 
             const frame = payload.frame;
