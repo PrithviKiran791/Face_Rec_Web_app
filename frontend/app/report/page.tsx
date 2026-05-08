@@ -101,6 +101,192 @@ export default function ReportPage() {
     document.body.removeChild(link);
   };
 
+  // JSON Export
+  const handleExportJSON = () => {
+    if (filtered.length === 0) {
+      alert("No data to export");
+      return;
+    }
+
+    const reportData = {
+      exportDate: new Date().toISOString(),
+      summary: {
+        totalRecords: filtered.length,
+        presentCount: presentCount,
+        absentCount: absentCount,
+        halfDayCount: filtered.filter((r) => r.Status === "Half Day").length,
+      },
+      filters: {
+        dateFilter,
+        nameFilter,
+        statusFilter,
+      },
+      records: filtered,
+    };
+
+    const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: "application/json;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `attendance-report-${new Date().toISOString().split("T")[0]}.json`);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  // PDF-Ready HTML Export
+  const handleExportPDF = () => {
+    if (filtered.length === 0) {
+      alert("No data to export");
+      return;
+    }
+
+    const htmlContent = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Attendance Report Analysis</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; color: #333; background: #f5f5f5; }
+    .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    h1 { color: #0ea5e9; border-bottom: 3px solid #0ea5e9; padding-bottom: 10px; }
+    h2 { color: #0f172a; margin-top: 24px; }
+    .summary { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 15px; margin: 20px 0; }
+    .stat { padding: 15px; background: #f0f9ff; border-left: 4px solid #0ea5e9; border-radius: 4px; }
+    .stat-label { font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 600; }
+    .stat-value { font-size: 24px; font-weight: 700; color: #0ea5e9; margin-top: 8px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+    th { background: #0f172a; color: white; padding: 12px; text-align: left; font-weight: 600; }
+    td { padding: 10px 12px; border-bottom: 1px solid #e2e8f0; }
+    tr:nth-child(even) { background: #f8fafc; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+    .badge-success { background: #dcfce7; color: #166534; }
+    .badge-danger { background: #fee2e2; color: #991b1b; }
+    .badge-warning { background: #fef3c7; color: #92400e; }
+    .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #64748b; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📊 Attendance Report Analysis</h1>
+    <p><strong>Generated:</strong> ${new Date().toLocaleString()}</p>
+    
+    <h2>Summary Statistics</h2>
+    <div class="summary">
+      <div class="stat">
+        <div class="stat-label">Total Records</div>
+        <div class="stat-value">${filtered.length}</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Present</div>
+        <div class="stat-value" style="color: #22c55e;">${presentCount}</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Absent</div>
+        <div class="stat-value" style="color: #ef4444;">${absentCount}</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Attendance Rate</div>
+        <div class="stat-value">${filtered.length > 0 ? ((presentCount / filtered.length) * 100).toFixed(1) : 0}%</div>
+      </div>
+    </div>
+
+    <h2>Applied Filters</h2>
+    <ul>
+      <li>Date: ${dateFilter || "All dates"}</li>
+      <li>Name: ${nameFilter || "All names"}</li>
+      <li>Status: ${statusFilter}</li>
+    </ul>
+
+    <h2>Attendance Details</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Name</th>
+          <th>Role</th>
+          <th>In Time</th>
+          <th>Out Time</th>
+          <th>Hours</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${filtered
+          .map(
+            (row) => `
+        <tr>
+          <td>${row.Date}</td>
+          <td>${row.Name}</td>
+          <td>${row.Role}</td>
+          <td>${row.In_time}</td>
+          <td>${row.Out_time}</td>
+          <td>${row.Duration_hours?.toFixed(1) ?? "-"}</td>
+          <td>
+            <span class="badge ${
+              row.Status === "Present"
+                ? "badge-success"
+                : row.Status === "Absent"
+                ? "badge-danger"
+                : "badge-warning"
+            }">
+              ${row.Status}
+            </span>
+          </td>
+        </tr>
+        `
+          )
+          .join("")}
+      </tbody>
+    </table>
+
+    <div class="footer">
+      <p>This report was automatically generated by the Face Attendance System.</p>
+      <p>For questions or issues, please contact your administrator.</p>
+    </div>
+  </div>
+</body>
+</html>
+    `;
+
+    const blob = new Blob([htmlContent], { type: "text/html;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `attendance-report-${new Date().toISOString().split("T")[0]}.html`);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  // Download Raw Logs
+  const handleDownloadRawLogs = () => {
+    if (!data || data.length === 0) {
+      alert("No logs available");
+      return;
+    }
+
+    const logsText = data
+      .map(
+        (row) =>
+          `${row.Date} | ${row.Name} (${row.Role}) | In: ${row.In_time} | Out: ${row.Out_time} | Hours: ${row.Duration_hours?.toFixed(1) ?? "-"} | Status: ${row.Status}`
+      )
+      .join("\n");
+
+    const blob = new Blob([logsText], { type: "text/plain;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `attendance-logs-${new Date().toISOString().split("T")[0]}.txt`);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   // Get all records for a specific person
   const personRecords = selectedPerson ? filtered.filter((r) => r.Name === selectedPerson) : [];
 
@@ -205,30 +391,79 @@ export default function ReportPage() {
       <section className="panel">
         <div className="panel-header">
           <div>
+            <h2 className="panel-title">Download Report</h2>
+            <p className="panel-subtitle">Export your attendance data in various formats.</p>
+          </div>
+        </div>
+        <div className="panel-body">
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr auto", gap: "10px", alignItems: "end" }}>
+            <div>
+              <label className="field-label" style={{ marginBottom: "6px" }}>Report Formats</label>
+              <button 
+                onClick={handleExportCSV}
+                className="btn"
+                style={{ width: "100%", backgroundColor: "rgba(34, 197, 94, 0.2)", color: "#22c55e", border: "1px solid rgba(34, 197, 94, 0.4)" }}
+              >
+                📊 CSV Format
+              </button>
+            </div>
+            <div>
+              <label className="field-label" style={{ marginBottom: "6px" }}>&nbsp;</label>
+              <button 
+                onClick={handleExportJSON}
+                className="btn"
+                style={{ width: "100%", backgroundColor: "rgba(59, 130, 246, 0.2)", color: "#3b82f6", border: "1px solid rgba(59, 130, 246, 0.4)" }}
+              >
+                📋 JSON Format
+              </button>
+            </div>
+            <div>
+              <label className="field-label" style={{ marginBottom: "6px" }}>&nbsp;</label>
+              <button 
+                onClick={handleExportPDF}
+                className="btn"
+                style={{ width: "100%", backgroundColor: "rgba(249, 115, 22, 0.2)", color: "#f97316", border: "1px solid rgba(249, 115, 22, 0.4)" }}
+              >
+                📄 PDF Report
+              </button>
+            </div>
+            <div>
+              <label className="field-label" style={{ marginBottom: "6px" }}>&nbsp;</label>
+              <button 
+                onClick={handleDownloadRawLogs}
+                className="btn"
+                style={{ width: "100%", backgroundColor: "rgba(139, 92, 246, 0.2)", color: "#8b5cf6", border: "1px solid rgba(139, 92, 246, 0.4)" }}
+              >
+                📝 Raw Logs
+              </button>
+            </div>
+            <button onClick={() => refetch()} className="btn btn-primary">
+              Refresh
+            </button>
+          </div>
+          <p style={{ fontSize: "12px", color: "var(--text-muted)", marginTop: "12px" }}>
+            💡 CSV and JSON formats respect your current filters. PDF and Raw Logs download all available data.
+          </p>
+        </div>
+      </section>
+
+      <section className="panel">
+        <div className="panel-header">
+          <div>
             <h2 className="panel-title">Attendance Report Table</h2>
-            <p className="panel-subtitle">Filter, import, and inspect attendance records.</p>
+            <p className="panel-subtitle">Filter and inspect attendance records in detail.</p>
           </div>
         </div>
 
         <div className="panel-body" style={{ display: "grid", gap: "12px" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr auto auto auto", gap: "10px" }}>
-            <input type="date" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} className="field" />
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr auto", gap: "10px" }}>
+            <input type="date" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} className="field" placeholder="Filter by date" />
             <input placeholder="Search name" value={nameFilter} onChange={(e) => setNameFilter(e.target.value)} className="field" />
             <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="select">
               {["All", "Present", "Half Day", "Absent"].map((s) => (
                 <option key={s}>{s}</option>
               ))}
             </select>
-            <button onClick={() => refetch()} className="btn btn-primary">
-              Refresh
-            </button>
-            <button 
-              onClick={handleExportCSV}
-              className="btn"
-              style={{ backgroundColor: "rgba(34, 197, 94, 0.2)", color: "#22c55e", border: "1px solid rgba(34, 197, 94, 0.4)" }}
-            >
-              Export CSV
-            </button>
             <button 
               onClick={() => {
                 if (window.confirm("Are you sure you want to clear all attendance logs? This action cannot be undone.")) {
@@ -238,7 +473,7 @@ export default function ReportPage() {
               className="btn"
               style={{ backgroundColor: "rgba(239, 68, 68, 0.2)", color: "#ef4444", border: "1px solid rgba(239, 68, 68, 0.4)" }}
             >
-              Clear All Logs
+              Clear All
             </button>
           </div>
 
