@@ -40,6 +40,8 @@ async def get_report():
     df = pd.DataFrame(records)
     df["TimeStamp"] = pd.to_datetime(df["TimeStamp"], errors="coerce")
     df = df.dropna(subset=["TimeStamp"])
+    if df.empty:
+        return {"report": []}
     df["Date"] = df["TimeStamp"].dt.date.astype(str)
     report = df.groupby(["Date","Name","Role"]).agg(
         In_time=("TimeStamp","min"),

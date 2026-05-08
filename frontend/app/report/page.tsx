@@ -4,77 +4,8 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@clerk/nextjs";
 import { getLogs, getReport, clearLogs } from "@/lib/api";
-
-type ReportRow = {
-  Date: string;
-  Name: string;
-  Role: string;
-  In_time: string;
-  Out_time: string;
-  Duration_hours?: number;
-  Status: string;
-};
-
-type RawRow = Record<string, unknown>;
-
-function asText(value: unknown, fallback = "-") {
-  if (typeof value === "string") return value;
-  if (typeof value === "number") return String(value);
-  return fallback;
-}
-
-function asNumber(value: unknown) {
-  if (typeof value === "number") return value;
-  if (typeof value === "string" && value.trim() !== "") {
-    const parsed = Number(value);
-    return Number.isFinite(parsed) ? parsed : undefined;
-  }
-  return undefined;
-}
-
-function parseRows(payload: unknown): ReportRow[] {
-  const source = (payload ?? {}) as Record<string, unknown>;
-
-  const candidates = [
-    source.report,
-    source.reports,
-    source.logs,
-    source.data,
-    (source.data as Record<string, unknown> | undefined)?.report,
-    (source.data as Record<string, unknown> | undefined)?.logs,
-    (source.result as Record<string, unknown> | undefined)?.report,
-    (source.result as Record<string, unknown> | undefined)?.logs
-  ];
-
-  const list = candidates.find((item) => Array.isArray(item)) as RawRow[] | undefined;
-  if (!list) return [];
-
-  return list.map((raw) => {
-    const date = asText(raw.Date ?? raw.date ?? raw.day ?? raw.attendance_date);
-    const name = asText(raw.Name ?? raw.name ?? raw.person_name ?? raw.identity_name ?? raw.employee_name);
-    const role = asText(raw.Role ?? raw.role ?? raw.user_role ?? raw.person_role, "Unknown");
-    const inTime = asText(raw.In_time ?? raw.in_time ?? raw.inTime ?? raw.first_in ?? raw.check_in);
-    const outTime = asText(raw.Out_time ?? raw.out_time ?? raw.outTime ?? raw.last_out ?? raw.check_out);
-    const duration = asNumber(raw.Duration_hours ?? raw.duration_hours ?? raw.duration ?? raw.hours);
-    const status = asText(raw.Status ?? raw.status ?? raw.attendance_status, "Absent");
-
-    return {
-      Date: date,
-      Name: name,
-      Role: role,
-      In_time: inTime,
-      Out_time: outTime,
-      Duration_hours: duration,
-      Status: status
-    };
-  });
-}
-
-function statusBadgeClass(status: string) {
-  if (status === "Present") return "success";
-  if (status === "Half Day") return "warning";
-  return "error";
-}
+import { parseRows, statusBadgeClass } from "@/lib/parseRows";
+import type { ReportRow } from "@/lib/parseRows";
 
 export default function ReportPage() {
   const [dateFilter, setDateFilter] = useState("");
@@ -86,6 +17,8 @@ export default function ReportPage() {
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["report", userId],
     enabled: !!isLoaded && !!userId,
+    staleTime: 0,
+    refetchInterval: 15000,
     queryFn: async () => {
       const reportResp = await getReport();
       const reportRows = parseRows(reportResp.data);

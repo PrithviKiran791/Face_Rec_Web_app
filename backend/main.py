@@ -1,7 +1,20 @@
-# backend/main.py
+import os
+import sys
+from unittest.mock import MagicMock
+
+# Force headless mode
+os.environ["MPLBACKEND"] = "Agg"
+
+# Mock the specific insightface module that imports matplotlib
+# This prevents insightface from ever trying to load matplotlib.pyplot
+sys.modules["insightface.thirdparty.face3d.mesh.vis"] = MagicMock()
+
+# Disable Albumentations version check to avoid timeout warnings
+os.environ["ALBUMENTATIONS_DISABLE_VERSION_CHECK"] = "1"
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import register, attendance, websocket
+from routers import register, attendance, websocket, groups, sessions, absentees
 from auth.router import router as auth_router
 
 app = FastAPI(title="Face Attendance API")
@@ -25,6 +38,9 @@ app.include_router(auth_router, prefix="/api/auth", tags=["Auth"])
 # ── Protected routes (require valid JWT cookie) ────────────────────────────────
 app.include_router(register.router,   prefix="/api/register",   tags=["Register"])
 app.include_router(attendance.router, prefix="/api/attendance", tags=["Attendance"])
+app.include_router(groups.router,     prefix="/api/groups",     tags=["Groups"])
+app.include_router(sessions.router,   prefix="/api/sessions",   tags=["Sessions"])
+app.include_router(absentees.router,  prefix="/api/absentees",  tags=["Absentees"])
 app.include_router(websocket.router,  prefix="/ws",             tags=["WebSocket"])
 
 

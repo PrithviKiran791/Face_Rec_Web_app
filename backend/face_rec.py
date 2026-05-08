@@ -8,8 +8,7 @@ import time
 import threading
 from pathlib import Path
 
-# insight face
-from insightface.app import FaceAnalysis
+# from insightface.app import FaceAnalysis  <-- Moved inside classes
 from sklearn.metrics import pairwise
 import datetime
 
@@ -121,9 +120,15 @@ def retrive_data(name):
     import pandas as pd
     return pd.DataFrame(data_list)
 
-# configure face analysis
-faceapp = FaceAnalysis(name='buffalo_sc',root='insightface_model', providers = ['CPUExecutionProvider'])
-faceapp.prepare(ctx_id = 0, det_size=(640,640), det_thresh = 0.5)
+# configure face analysis (lazy loader)
+_faceapp = None
+def get_faceapp():
+    global _faceapp
+    if _faceapp is None:
+        from insightface.app import FaceAnalysis
+        _faceapp = FaceAnalysis(name='buffalo_sc', root='insightface_model', providers=['CPUExecutionProvider'])
+        _faceapp.prepare(ctx_id=0, det_size=(640, 640), det_thresh=0.5)
+    return _faceapp
 
 # ML Search Algorithm
 def ml_search_algorithm(dataframe,feature_column,test_vector,
@@ -206,7 +211,7 @@ class RealTimePred:
             return test_copy, []
 
         # step-1: take the test image and apply to insight face
-        results = faceapp.get(test_image)
+        results = get_faceapp().get(test_image)
         # step-2: use for loop and extract each embedding and pass to ml_search_algorithm
 
         current_names = []
@@ -268,7 +273,7 @@ class RegistrationForm:
 
         self.last_inference_ts = now
         #get results from insightface model 
-        results = faceapp.get(frame,max_num=1)
+        results = get_faceapp().get(frame,max_num=1)
         for res in results:
             x1,y1,x2,y2 = res['bbox'].astype(int)
             cv2.rectangle(frame,(x1,y1),(x2,y2),(0,255,0),1)

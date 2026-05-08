@@ -71,12 +71,12 @@ export default function LandingPage() {
       
       <div style={{ position: "relative", zIndex: 10 }}>
         <style dangerouslySetInnerHTML={{ __html: `
-          @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
           
           :root {
             --accent: #0ea5e9;
             --accent-glow: rgba(14, 165, 233, 0.18);
-            --font-display: 'Syne', sans-serif;
+            --font-display: 'Outfit', sans-serif;
           }
 
           .reveal { opacity: 1; transform: translateY(0); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
@@ -110,10 +110,33 @@ export default function LandingPage() {
             border: 2px solid var(--accent);
             border-radius: 4px;
           }
+
+          @media (max-width: 1024px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+            .how-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          }
+          
+          @media (max-width: 768px) {
+            .nav-container { padding: 0 1.5rem !important; }
+            .nav-links { display: none !important; }
+            .hero-section { padding: 6rem 1.5rem 4rem !important; }
+            .hero-h1 { font-size: clamp(2.5rem, 12vw, 4rem) !important; word-break: break-word; }
+            .hero-p { font-size: 16px !important; }
+            .hero-visual-grid { grid-template-columns: 1fr !important; }
+            .face-box-1 { left: 15% !important; }
+            .face-box-2 { right: 15% !important; }
+            .stats-grid { grid-template-columns: 1fr !important; }
+            .section-padding { padding: 4rem 1.5rem !important; }
+            .how-grid { grid-template-columns: 1fr !important; }
+            .use-cases-grid { grid-template-columns: 1fr !important; }
+            .use-cases-card { flex-direction: column !important; text-align: center !important; align-items: center !important; }
+            .footer-container { flex-direction: column !important; gap: 1rem !important; text-align: center !important; padding: 2rem 1.5rem !important; }
+            .cta-buttons { flex-direction: column !important; padding: 0 1rem !important; }
+          }
         `}} />
 
         {/* NAV */}
-        <nav style={{
+        <nav className="nav-container" style={{
           position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
           display: "flex", alignItems: "center", justifyContent: "space-between",
           padding: "0 3rem", height: "72px",
@@ -127,7 +150,7 @@ export default function LandingPage() {
             <div style={{ width: "10px", height: "10px", borderRadius: "50%", background: "var(--accent)", animation: "pulse-dot 2s ease infinite" }} />
             FaceAttend
           </Link>
-          <div style={{ display: "flex", gap: "2.5rem" }}>
+          <div className="nav-links" style={{ display: "flex", gap: "2.5rem" }}>
             <a href="#how" style={{ color: "#94a3b8", textDecoration: "none", fontSize: "14px", fontWeight: 500 }}>How it works</a>
             <a href="#use-cases" style={{ color: "#94a3b8", textDecoration: "none", fontSize: "14px", fontWeight: 500 }}>Use cases</a>
           </div>
@@ -140,7 +163,7 @@ export default function LandingPage() {
         </nav>
 
         {/* HERO */}
-        <section style={{ 
+        <section className="hero-section" style={{ 
           position: "relative", minHeight: "100vh", display: "flex", flexDirection: "column", 
           alignItems: "center", justifyContent: "center", textAlign: "center", padding: "6rem 2rem 4rem" 
         }}>
@@ -159,15 +182,15 @@ export default function LandingPage() {
             Real-time face recognition
           </div>
 
-          <h1 className="reveal" style={{ 
+          <h1 className="reveal hero-h1" style={{ 
             fontFamily: "var(--font-display)", fontSize: "clamp(3rem, 7vw, 6rem)", fontWeight: 800, 
             lineHeight: 1, letterSpacing: "-2px", marginBottom: "1.5rem" 
           }}>
             Attendance,<br/>finally <em style={{ fontStyle: "normal", color: "var(--accent)" }}>automated</em>
           </h1>
 
-          <p className="reveal" style={{ maxWidth: "560px", fontSize: "18px", fontWeight: 300, color: "#94a3b8", lineHeight: 1.7, marginBottom: "2.5rem" }}>
-            Register once. Recognise always. A full-stack attendance system powered by InsightFace and live video — no ID cards, no sign-in sheets.
+          <p className="reveal hero-p" style={{ maxWidth: "560px", fontSize: "18px", fontWeight: 300, color: "#94a3b8", lineHeight: 1.7, marginBottom: "2.5rem" }}>
+            Register once. Recognise always. An invisible, AI-driven biometric engine powered by InsightFace and live video — no ID cards, no sign-in sheets.
           </p>
 
           <div className="reveal" style={{ display: "flex", gap: "12px", justifyContent: "center" }}>
@@ -194,7 +217,7 @@ export default function LandingPage() {
                 </div>
               </div>
               
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 280px", gap: "1rem", minHeight: "260px" }}>
+              <div className="hero-visual-grid" style={{ display: "grid", gridTemplateColumns: "1fr 280px", gap: "1rem", minHeight: "260px" }}>
                 <div style={{ background: "#030712", borderRadius: "10px", border: "1px solid rgba(255,255,255,0.07)", position: "relative", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
                   <div className="scan-line" />
                   <div style={{ position: "absolute", top: "10px", left: "10px", fontSize: "11px", color: "var(--accent)", background: "rgba(0,0,0,0.6)", padding: "3px 7px", borderRadius: "3px", fontFamily: "monospace" }}>
@@ -202,7 +225,7 @@ export default function LandingPage() {
                   </div>
                   
                   {/* Face Boxes with embedded Silhouettes */}
-                  <div className="face-box" style={{ 
+                  <div className="face-box face-box-1" style={{ 
                     width: "110px", height: "130px", top: "30px", left: "80px",
                     display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end",
                     paddingBottom: "15px"
@@ -221,7 +244,7 @@ export default function LandingPage() {
                     </div>
                   </div>
 
-                  <div className="face-box" style={{ 
+                  <div className="face-box face-box-2" style={{ 
                     width: "90px", height: "110px", top: "50px", right: "100px", borderColor: "#3b82f6",
                     display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end",
                     paddingBottom: "12px"
@@ -264,7 +287,7 @@ export default function LandingPage() {
         </section>
 
         {/* STATS */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", background: "rgba(255,255,255,0.07)", borderTop: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+        <div className="stats-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", background: "rgba(255,255,255,0.07)", borderTop: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
           {[
             { num: "99", label: "Recognition accuracy", suffix: "%" },
             { num: "512", label: "Face embedding vector", suffix: "-D" },
@@ -281,13 +304,13 @@ export default function LandingPage() {
         </div>
 
         {/* HOW IT WORKS */}
-        <section id="how" style={{ padding: "7rem 3rem", background: "rgba(15, 23, 42, 0.45)", borderTop: "1px solid rgba(255,255,255,0.07)" }}>
+        <section id="how" className="section-padding" style={{ padding: "7rem 3rem", background: "rgba(15, 23, 42, 0.45)", borderTop: "1px solid rgba(255,255,255,0.07)" }}>
           <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
             <div className="reveal" style={{ textAlign: "center" }}>
               <div style={{ fontSize: "11px", textTransform: "uppercase", color: "var(--accent)", marginBottom: "1rem" }}>How it works</div>
               <h2 style={{ fontFamily: "var(--font-display)", fontSize: "3rem", fontWeight: 800 }}>Four steps to automation</h2>
             </div>
-            <div className="reveal" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "2rem", marginTop: "3.5rem" }}>
+            <div className="reveal how-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "2rem", marginTop: "3.5rem" }}>
               {[
                 { step: "01", title: "Register face", desc: "User faces the webcam. 200 samples are captured and averaged into a 512-D embedding." },
                 { step: "02", title: "Live prediction", desc: "Frames stream over WebSocket. InsightFace extracts embeddings and compares them instantly." },
@@ -305,19 +328,19 @@ export default function LandingPage() {
         </section>
 
         {/* USE CASES */}
-        <section id="use-cases" style={{ padding: "7rem 3rem", maxWidth: "1100px", margin: "0 auto" }}>
+        <section id="use-cases" className="section-padding" style={{ padding: "7rem 3rem", maxWidth: "1100px", margin: "0 auto" }}>
           <div className="reveal">
             <div style={{ fontSize: "11px", textTransform: "uppercase", color: "var(--accent)", marginBottom: "1rem" }}>Use cases</div>
             <h2 style={{ fontFamily: "var(--font-display)", fontSize: "3rem", fontWeight: 800 }}>Built for real environments</h2>
           </div>
-          <div className="reveal" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1px", background: "rgba(255,255,255,0.07)", borderRadius: "16px", overflow: "hidden", marginTop: "3.5rem" }}>
+          <div className="reveal use-cases-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1px", background: "rgba(255,255,255,0.07)", borderRadius: "16px", overflow: "hidden", marginTop: "3.5rem" }}>
             {[
               { e: "🏫", t: "Schools & colleges", d: "Automated student roll call. No proxy attendance. Period-wise reports." },
               { e: "🏢", t: "Offices & corporates", d: "Check-in without cards. Duration tracking feeds directly into HR dashboards." },
               { e: "🔐", t: "Secure access control", d: "Restrict entry to registered faces only. Unknown detections logged in real time." },
               { e: "🎪", t: "Event management", d: "Verify attendees at the door using guest lists. No queues, no ticket scanning." }
             ].map((use, i) => (
-              <div key={i} style={{ background: "#0d1117", padding: "2.5rem", display: "flex", gap: "1.25rem" }}>
+              <div key={i} className="use-cases-card" style={{ background: "#0d1117", padding: "2.5rem", display: "flex", gap: "1.25rem" }}>
                 <div style={{ fontSize: "28px" }}>{use.e}</div>
                 <div>
                   <div style={{ fontWeight: 700, marginBottom: "0.4rem" }}>{use.t}</div>
@@ -329,15 +352,15 @@ export default function LandingPage() {
         </section>
 
         {/* CTA */}
-        <section style={{ padding: "8rem 3rem", textAlign: "center", position: "relative" }}>
-          <h2 className="reveal" style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2.5rem, 5vw, 4rem)", fontWeight: 800 }}>Ready to <em style={{ fontStyle: "normal", color: "var(--accent)" }}>eliminate</em> manual attendance?</h2>
-          <div className="reveal" style={{ marginTop: "2.5rem", display: "flex", gap: "12px", justifyContent: "center" }}>
+        <section className="section-padding" style={{ padding: "8rem 3rem", textAlign: "center", position: "relative" }}>
+          <h2 className="reveal cta-h2" style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2.5rem, 5vw, 4rem)", fontWeight: 800 }}>Ready to <em style={{ fontStyle: "normal", color: "var(--accent)" }}>eliminate</em> manual attendance?</h2>
+          <div className="reveal cta-buttons" style={{ marginTop: "2.5rem", display: "flex", gap: "12px", justifyContent: "center" }}>
             <Link href={userId ? "/dashboard" : "/login"} style={{ background: "var(--accent)", color: "#000", padding: "14px 32px", borderRadius: "8px", fontWeight: 500, textDecoration: "none" }}>{userId ? "Return to Dashboard" : "Launch the app"}</Link>
             <Link href={userId ? "/register" : "/login"} style={{ color: "#fff", padding: "14px 32px", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.12)", textDecoration: "none" }}>Register a face</Link>
           </div>
         </section>
 
-        <footer style={{ borderTop: "1px solid rgba(255,255,255,0.07)", padding: "2rem 3rem", display: "flex", justifyContent: "space-between", color: "#4a5a6a", fontSize: "12px" }}>
+        <footer className="footer-container" style={{ borderTop: "1px solid rgba(255,255,255,0.07)", padding: "2rem 3rem", display: "flex", justifyContent: "space-between", color: "#4a5a6a", fontSize: "12px" }}>
           <div style={{ fontWeight: 800 }}>FaceAttend</div>
           <div>Built with InsightFace, FastAPI & Next.js</div>
         </footer>
