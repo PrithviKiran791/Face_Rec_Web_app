@@ -308,9 +308,9 @@ export default function LivePage() {
           background: rgba(15, 23, 42, 0.7);
           backdrop-filter: blur(12px);
           -webkit-backdrop-filter: blur(12px);
-          border: 1px solid rgba(20, 184, 166, 0.2);
+          border: 1px solid rgba(14, 165, 233, 0.2);
           border-radius: 8px;
-          box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(20, 184, 166, 0.02);
+          box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(14, 165, 233, 0.02);
           overflow: hidden;
         }
 
@@ -319,14 +319,14 @@ export default function LivePage() {
           justify-content: space-between;
           align-items: center;
           padding: 16px 24px;
-          border-bottom: 1px solid rgba(20, 184, 166, 0.2);
+          border-bottom: 1px solid rgba(14, 165, 233, 0.2);
         }
 
         .cyber-title {
           font-size: 14px;
           font-weight: 600;
           letter-spacing: 1px;
-          color: #14b8a6;
+          color: #0ea5e9;
           text-transform: uppercase;
           display: flex;
           align-items: center;
@@ -338,8 +338,8 @@ export default function LivePage() {
           display: inline-block;
           width: 8px;
           height: 8px;
-          background-color: #14b8a6;
-          box-shadow: 0 0 8px #14b8a6;
+          background-color: #0ea5e9;
+          box-shadow: 0 0 8px #0ea5e9;
         }
 
         .cyber-grid {
@@ -363,8 +363,8 @@ export default function LivePage() {
           aspect-ratio: 16/9;
           background: #000;
           border-radius: 4px;
-          border: 1px solid rgba(20, 184, 166, 0.3);
-          box-shadow: 0 0 40px rgba(20, 184, 166, 0.05);
+          border: 1px solid rgba(14, 165, 233, 0.3);
+          box-shadow: 0 0 40px rgba(14, 165, 233, 0.05);
           overflow: hidden;
           display: flex;
           align-items: center;
@@ -386,13 +386,13 @@ export default function LivePage() {
           align-items: center;
           padding: 16px;
           background: rgba(11, 15, 25, 0.8);
-          border-top: 1px solid rgba(20, 184, 166, 0.2);
+          border-top: 1px solid rgba(14, 165, 233, 0.2);
         }
 
         .cyber-btn {
           background: transparent;
-          border: 1px solid #14b8a6;
-          color: #14b8a6;
+          border: 1px solid #0ea5e9;
+          color: #0ea5e9;
           padding: 10px 20px;
           font-family: 'Fira Code', monospace;
           font-size: 13px;
@@ -408,8 +408,8 @@ export default function LivePage() {
         }
 
         .cyber-btn:hover {
-          background: rgba(20, 184, 166, 0.1);
-          box-shadow: 0 0 15px rgba(20, 184, 166, 0.2);
+          background: rgba(14, 165, 233, 0.1);
+          box-shadow: 0 0 15px rgba(14, 165, 233, 0.2);
         }
 
         .cyber-btn.danger {
@@ -424,7 +424,7 @@ export default function LivePage() {
 
         .cyber-select {
           background: rgba(15, 23, 42, 0.8);
-          border: 1px solid rgba(20, 184, 166, 0.3);
+          border: 1px solid rgba(14, 165, 233, 0.3);
           color: #f8fafc;
           padding: 8px 12px;
           border-radius: 4px;
@@ -436,7 +436,7 @@ export default function LivePage() {
         /* Log Panel */
         .log-section {
           padding: 16px;
-          border-bottom: 1px solid rgba(20, 184, 166, 0.15);
+          border-bottom: 1px solid rgba(14, 165, 233, 0.15);
         }
         
         .log-title {
@@ -455,25 +455,25 @@ export default function LivePage() {
           gap: 12px;
           padding: 10px;
           background: rgba(255, 255, 255, 0.02);
-          border-left: 2px solid #14b8a6;
+          border-left: 2px solid #0ea5e9;
           margin-bottom: 8px;
           border-radius: 0 4px 4px 0;
           transition: background 0.2s;
         }
 
         .log-item:hover {
-          background: rgba(20, 184, 166, 0.05);
+          background: rgba(14, 165, 233, 0.05);
         }
 
         .log-avatar {
           width: 28px;
           height: 28px;
           border-radius: 4px;
-          background: rgba(20, 184, 166, 0.2);
+          background: rgba(14, 165, 233, 0.2);
           display: flex;
           align-items: center;
           justify-content: center;
-          color: #14b8a6;
+          color: #0ea5e9;
           font-size: 12px;
           font-weight: 600;
         }
@@ -505,8 +505,8 @@ export default function LivePage() {
           width: 6px;
           height: 6px;
           border-radius: 50%;
-          background: #14b8a6;
-          box-shadow: 0 0 6px #14b8a6;
+          background: #0ea5e9;
+          box-shadow: 0 0 6px #0ea5e9;
         }
         .status-dot.offline {
           background: #ef4444;
@@ -516,8 +516,8 @@ export default function LivePage() {
         /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
-        ::-webkit-scrollbar-thumb { background: rgba(20, 184, 166, 0.3); border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(20, 184, 166, 0.5); }
+        ::-webkit-scrollbar-thumb { background: rgba(14, 165, 233, 0.3); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(14, 165, 233, 0.5); }
       `}} />
 
       {/* 1. Top Context Header */}
@@ -526,7 +526,7 @@ export default function LivePage() {
           <div className="cyber-title">
             ACTIVE SESSION: CS-301 Computer Networks | Lab Group B
           </div>
-          <div className="mono" style={{ fontSize: '13px', color: '#14b8a6' }}>
+          <div className="mono" style={{ fontSize: '13px', color: '#0ea5e9' }}>
             Check-in Window: <span style={{ color: '#f8fafc' }}>14:22 remaining</span>
           </div>
         </div>
@@ -539,8 +539,8 @@ export default function LivePage() {
             <div style={{ 
               width: `${progressPercent}%`, 
               height: '100%', 
-              background: '#14b8a6',
-              boxShadow: '0 0 10px #14b8a6',
+              background: '#0ea5e9',
+              boxShadow: '0 0 10px #0ea5e9',
               transition: 'width 0.5s ease-out'
             }} />
           </div>
@@ -567,18 +567,18 @@ export default function LivePage() {
             
             {/* Standby / Loading Overlays */}
             {!active && (
-              <div className="mono" style={{ color: 'rgba(20, 184, 166, 0.5)', textAlign: 'center', zIndex: 2 }}>
+              <div className="mono" style={{ color: 'rgba(14, 165, 233, 0.5)', textAlign: 'center', zIndex: 2 }}>
                 <div style={{ fontSize: '24px', marginBottom: '8px' }}>[ STANDBY ]</div>
                 <div style={{ fontSize: '12px' }}>AWAITING COMMAND TO INITIALIZE UPLINK</div>
               </div>
             )}
             
             {active && socketStatus === "connecting" && (
-              <div className="mono" style={{ color: '#14b8a6', textAlign: 'center', zIndex: 2 }}>
+              <div className="mono" style={{ color: '#0ea5e9', textAlign: 'center', zIndex: 2 }}>
                 <div style={{ 
                   width: '40px', height: '40px', 
-                  border: '2px solid rgba(20, 184, 166, 0.2)', 
-                  borderTopColor: '#14b8a6', 
+                  border: '2px solid rgba(14, 165, 233, 0.2)', 
+                  borderTopColor: '#0ea5e9', 
                   borderRadius: '50%', 
                   animation: 'spin 1s linear infinite',
                   margin: '0 auto 16px'
@@ -590,9 +590,9 @@ export default function LivePage() {
             {/* Overlay Grid lines for tech feel */}
             {active && socketStatus === "connected" && (
               <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, pointerEvents: 'none', zIndex: 3 }}>
-                <div style={{ position: 'absolute', top: '50%', left: '0', right: '0', height: '1px', background: 'rgba(20, 184, 166, 0.1)' }} />
-                <div style={{ position: 'absolute', left: '50%', top: '0', bottom: '0', width: '1px', background: 'rgba(20, 184, 166, 0.1)' }} />
-                <div style={{ position: 'absolute', top: '16px', left: '16px', color: '#14b8a6', fontSize: '10px' }} className="mono">REC •</div>
+                <div style={{ position: 'absolute', top: '50%', left: '0', right: '0', height: '1px', background: 'rgba(14, 165, 233, 0.1)' }} />
+                <div style={{ position: 'absolute', left: '50%', top: '0', bottom: '0', width: '1px', background: 'rgba(14, 165, 233, 0.1)' }} />
+                <div style={{ position: 'absolute', top: '16px', left: '16px', color: '#0ea5e9', fontSize: '10px' }} className="mono">REC •</div>
               </div>
             )}
           </div>
@@ -615,7 +615,7 @@ export default function LivePage() {
                 <option>Back Door Feed</option>
               </select>
               
-              <span className="mono" style={{ fontSize: '12px', color: socketStatus === 'connected' ? '#14b8a6' : '#94a3b8' }}>
+              <span className="mono" style={{ fontSize: '12px', color: socketStatus === 'connected' ? '#0ea5e9' : '#94a3b8' }}>
                 STATUS: {socketStatus.toUpperCase()}
               </span>
             </div>
@@ -634,7 +634,7 @@ export default function LivePage() {
                 </>
               ) : (
                 <>
-                  <span style={{ display: 'inline-block', width: '8px', height: '8px', background: '#14b8a6', borderRadius: '50%' }} />
+                  <span style={{ display: 'inline-block', width: '8px', height: '8px', background: '#0ea5e9', borderRadius: '50%' }} />
                   INITIALIZE
                 </>
               )}
@@ -660,7 +660,7 @@ export default function LivePage() {
                     <div style={{ fontSize: '13px', fontWeight: 500, color: '#f8fafc' }}>{log.name}</div>
                     <div className="mono" style={{ fontSize: '11px', color: '#64748b' }}>{log.time}</div>
                   </div>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="20 6 9 17 4 12"></polyline>
                   </svg>
                 </div>

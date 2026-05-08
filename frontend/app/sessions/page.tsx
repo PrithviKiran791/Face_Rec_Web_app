@@ -321,11 +321,11 @@ export default function SessionsPage() {
               <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                 <div>
                   <label className="field-label">Session Name *</label>
-                  <input value={fName} onChange={(e) => setFName(e.target.value)} placeholder="e.g. Math Period 1, Morning Lecture" autoFocus />
+                  <input className="field" value={fName} onChange={(e) => setFName(e.target.value)} placeholder="e.g. Math Period 1, Morning Lecture" autoFocus />
                 </div>
                 <div>
                   <label className="field-label">Linked Group *</label>
-                  <select value={fGroup} onChange={(e) => setFGroup(e.target.value)} style={{ width: "100%" }}>
+                  <select className="field" value={fGroup} onChange={(e) => setFGroup(e.target.value)} style={{ width: "100%" }}>
                     <option value="">Select a group...</option>
                     {groups.map((g) => <option key={g.id} value={g.id}>{g.name} ({g.member_count} members)</option>)}
                   </select>
