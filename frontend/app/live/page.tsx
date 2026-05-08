@@ -69,7 +69,6 @@ export default function LivePage() {
   const [seenNames, setSeenNames] = useState<Set<string>>(new Set());
   const [fps, setFps] = useState(0);
   const [latency, setLatency] = useState(0);
-  const [cameraSource, setCameraSource] = useState("Main Entrance RTSP");
 
   // Mock Expected Data
   const expectedTotal = 50;
@@ -605,16 +604,6 @@ export default function LivePage() {
 
           <div className="control-bar">
             <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-              <select 
-                className="cyber-select"
-                value={cameraSource}
-                onChange={(e) => setCameraSource(e.target.value)}
-              >
-                <option>Main Entrance RTSP</option>
-                <option>Webcam (Local)</option>
-                <option>Back Door Feed</option>
-              </select>
-              
               <span className="mono" style={{ fontSize: '12px', color: socketStatus === 'connected' ? '#0ea5e9' : '#94a3b8' }}>
                 STATUS: {socketStatus.toUpperCase()}
               </span>
