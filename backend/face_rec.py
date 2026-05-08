@@ -166,6 +166,7 @@ def ml_search_algorithm(dataframe,feature_column,test_vector,
 class RealTimePred:
     def __init__(self):
         self.logs = {'name': [], 'role': [], 'current_time': []}
+        self.logged_names = set()
     
     def reset_dict(self):
         self.logs = {'name': [], 'role': [], 'current_time': []}
@@ -235,9 +236,11 @@ class RealTimePred:
             cv2.putText(test_copy,text_gen,(x1,y1),cv2.FONT_HERSHEY_DUPLEX,0.7,color,2)
             cv2.putText(test_copy,current_time,(x1,y2),cv2.FONT_HERSHEY_DUPLEX,0.5,color,1)
             # save the logs in the dict
-            self.logs['name'].append(person_name)
-            self.logs['role'].append(person_role)
-            self.logs['current_time'].append(current_time)
+            if person_name != 'Unknown' and person_name not in self.logged_names:
+                self.logged_names.add(person_name)
+                self.logs['name'].append(person_name)
+                self.logs['role'].append(person_role)
+                self.logs['current_time'].append(current_time)
 
         recognized_names = list(set(current_names))
         return test_copy, recognized_names

@@ -523,10 +523,10 @@ export default function LivePage() {
       <div className="cyber-panel">
         <div className="cyber-header" style={{ paddingBottom: '12px' }}>
           <div className="cyber-title">
-            ACTIVE SESSION: CS-301 Computer Networks | Lab Group B
+            LIVE MONITOR
           </div>
           <div className="mono" style={{ fontSize: '13px', color: '#0ea5e9' }}>
-            Check-in Window: <span style={{ color: '#f8fafc' }}>14:22 remaining</span>
+            Check-in Window: <span style={{ color: '#f8fafc' }}>Camera feed only</span>
           </div>
         </div>
         <div style={{ padding: '0 24px 16px' }}>
